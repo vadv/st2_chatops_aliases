@@ -24,6 +24,6 @@ Full list of available commands (with real use case Slack screenshots):
 * [`!service restart {{service_name}} on {{hosts}}`](http://i.imgur.com/xVyl6xW.png) - Restart service on remote hosts
 * [`!show version {{package}} on {{hosts}}`](http://i.imgur.com/RnUqEUb.png) - Show package versions on hosts
 * [`!update {{package}} on {{hosts}}`](http://i.imgur.com/IT2EDcn.png) - Update package on remote hosts
-* [`!cowsay {{message}}`](http://i.imgur.com/ziIh0sZ.png) - Draws a cow that says what you want
+* [`!cowsay <message>`](https://i.imgur.com/mCYHFM6.png) - Draws a cow that says what you want
 
 See action [`aliases`](aliases/) code for explanation.
