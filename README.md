@@ -19,7 +19,7 @@ st2 run packs.install packs=st2-chatops-aliases repo_url=armab/st2-chatops-alias
 Full list of available commands (with real use case Slack screenshots):
 * [`!ansible <command>`](https://i.imgur.com/9xEgfP6.png) - Run ansible command on local machine
 * [`!status {{hosts}}`](http://i.imgur.com/fak6ZP7.png) - Show status for hosts (ansible ping module)
-* [`!show nginx stats on {{hosts}}`](http://i.imgur.com/Sc5wm7m.png) - Show sorted http status codes from nginx on hosts
+* [`!show nginx stats on <hosts>`](https://i.imgur.com/Wsvdx3W.png) - Show sorted http status codes from nginx on hosts
 * [`!show mysql processlist {{hosts=db}}`](http://i.imgur.com/6YNy3GJ.png) - Show MySQL processlist
 * [`!service restart {{service_name}} on {{hosts}}`](http://i.imgur.com/xVyl6xW.png) - Restart service on remote hosts
 * [`!show version {{package}} on {{hosts}}`](http://i.imgur.com/RnUqEUb.png) - Show package versions on hosts

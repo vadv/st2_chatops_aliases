@@ -6,4 +6,8 @@ name: chatops.http_status_codes
 action_ref: st2-chatops-aliases.http_status_codes
 description: Show sorted http status codes from nginx on hosts
 formats:
-  - "show nginx stats on {{hosts}}"
+  - display: "show nginx stats on <hosts>"
+    representation:
+      - "show nginx stats on {{ hosts }}"
+result:
+  format: "```{{ execution.result.stdout }}```"
