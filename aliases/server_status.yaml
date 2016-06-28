@@ -6,4 +6,23 @@ name: chatops.ansible_server_status
 action_ref: st2-chatops-aliases.server_status
 description: Show status for hosts (ansible ping module)
 formats:
-  - "status {{hosts}}"
+  - display: "status <hosts>"
+    representation:
+      - "status {{ hosts }}"
+      - "ping {{ hosts }}"
+result:
+  format: |
+    Here is your status for `{{ execution.parameters.hosts }}` host(s): {~}
+    ```{{ execution.result.stdout }}```
+  extra:
+    slack:
+      color: "{% if execution.result.succeeded %}good{% else %}danger{% endif %}"
+      fields:
+        - title: Alive
+          value: "{{ execution.result.stdout|regex_replace('(?!SUCCESS).', '')|wordcount }}"
+          short: true
+        - title: Dead
+          value: "{{ execution.result.stdout|regex_replace('(?!UNREACHABLE).', '')|wordcount }}"
+          short: true
+      footer: "{{ execution.id }}"
+      footer_icon: "https://stackstorm.com/wp/wp-content/uploads/2015/01/favicon.png"
