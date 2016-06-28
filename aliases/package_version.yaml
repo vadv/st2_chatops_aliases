@@ -6,4 +6,12 @@ name: chatops.package_version
 action_ref: st2-chatops-aliases.package_version
 description: Show package versions on hosts
 formats:
-  - "show version {{package}} on {{hosts}}"
+  - display: "show version <package> on <hosts>"
+    representation:
+      - "show version {{ package }} on {{ hosts }}"
+result:
+  format: |
+    `{{ execution.parameters.package }}` versions on `{{ execution.parameters.hosts }}`: {~}
+    {% if execution.result.stderr %}*Stdout:* {% endif %}
+    ```{{ execution.result.stdout }}```
+    {% if execution.result.stderr %}*Stderr:* ```{{ execution.result.stderr }}```{% endif %}
