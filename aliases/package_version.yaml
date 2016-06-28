@@ -9,6 +9,7 @@ formats:
   - display: "show version <package> on <hosts>"
     representation:
       - "show version {{ package }} on {{ hosts }}"
+      - "show {{ package }} version on {{ hosts }}"
 result:
   format: |
     `{{ execution.parameters.package }}` versions on `{{ execution.parameters.hosts }}`: {~}
