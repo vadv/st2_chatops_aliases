@@ -21,7 +21,7 @@ Full list of available commands (with real use case Slack screenshots):
 * [`!status <hosts>`](https://i.imgur.com/ZOZgGnz.png) - Show status for hosts (ansible ping module)
 * [`!show nginx stats on <hosts>`](https://i.imgur.com/Wsvdx3W.png) - Show sorted http status codes from nginx on hosts
 * [`!show mysql processlist <hosts=db>`](https://i.imgur.com/RxePho1.png) - Show MySQL processlist
-* [`!service restart {{service_name}} on {{hosts}}`](http://i.imgur.com/xVyl6xW.png) - Restart service on remote hosts
+* [`!service restart <service_name> on <hosts>`](https://i.imgur.com/rNsHdtK.png) - Restart service on remote hosts
 * [`!show version <package> on <hosts>`](https://i.imgur.com/M8hTv9W.png) - Show package versions on hosts
 * [`!update {{package}} on {{hosts}}`](http://i.imgur.com/IT2EDcn.png) - Update package on remote hosts
 * [`!cowsay <message>`](https://i.imgur.com/mCYHFM6.png) - Draws a cow that says what you want
