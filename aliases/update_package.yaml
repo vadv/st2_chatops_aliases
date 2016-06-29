@@ -6,4 +6,25 @@ name: chatops.ansible_package_update
 action_ref: st2-chatops-aliases.update_package
 description: Update package on remote hosts
 formats:
-  - "update {{package}} on {{hosts}}"
+  - display: "update <package> on <hosts>"
+    representation:
+      - "update {{ package }} on {{ hosts }}"
+      - "upgrade {{ package }} on {{ hosts }}"
+result:
+  format: |
+    Update package `{{ execution.parameters.package }}` on `{{ execution.parameters.hosts }}` host(s): {~}
+    {% if execution.result.stderr %}
+    *Exit Status*: `{{ execution.result.return_code }}`
+    *Stderr:* ```{{ execution.result.stderr }}```
+    *Stdout:*
+    {% endif %}
+    ```{{ execution.result.stdout }}```
+  extra:
+    slack:
+      color: "{% if execution.result.succeeded %}good{% else %}danger{% endif %}"
+      fields:
+        - title: Updated nodes
+          value: "{{ execution.result.stdout|regex_replace('(?!changed=1).', '')|wordcount }}"
+          short: true
+      footer: "{{ execution.id }}"
+      footer_icon: "https://stackstorm.com/wp/wp-content/uploads/2015/01/favicon.png"
