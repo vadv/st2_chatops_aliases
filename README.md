@@ -16,6 +16,8 @@ st2 run packs.install packs=st2-chatops-aliases repo_url=armab/st2-chatops-alias
 ```
 
 ## Available ChatOps commands
+![Ansible ChatOps with StackStorm, Hubot and Slack. List of ChatOps commands](https://i.imgur.com/LGLey2m.png)
+
 Full list of available commands (with real use case Slack screenshots):
 * [`!ansible <command>`](https://i.imgur.com/9xEgfP6.png) - Run ansible command on local machine
 * [`!status <hosts>`](https://i.imgur.com/ZOZgGnz.png) - Show status for hosts (ansible ping module)
