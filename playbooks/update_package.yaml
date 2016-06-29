@@ -2,7 +2,8 @@
 - name: Update package on remote hosts, run on 25% of servers at a time
   hosts: "{{ hosts }}"
   serial: "25%"
-  sudo: yes
+  become: True
+  become_user: root
   tasks:
     - name: Check if Package is installed
       command: dpkg-query -l {{ package }}
@@ -14,4 +15,5 @@
       apt: name={{ package }}
         state=latest
         update_cache=yes
+        cache_valid_time=600
       when: is_installed.rc == 0
