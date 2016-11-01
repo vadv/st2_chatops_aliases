@@ -27,7 +27,7 @@ result:
           value: "{{ execution.result.stdout|regex_replace('(?!changed=1).', '')|wordcount }}"
           short: true
         - title: Executed in
-          value: ":timer_clock: {{execution.elapsed_seconds | to_human_time_from_seconds}}"
+          value: ":timer_clock: {{ execution.elapsed_seconds | to_human_time_from_seconds }}"
           short: true
       footer: "{{ execution.id }}"
       footer_icon: "https://stackstorm.com/wp/wp-content/uploads/2015/01/favicon.png"
