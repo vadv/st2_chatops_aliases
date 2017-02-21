@@ -3,7 +3,7 @@
 # eq: /opt/stackstorm/virtualenvs/ansible/bin/ansible all -m shell -a "dpkg -s bash | grep 'Version' | sed 's/^Version: //'"
 ---
 name: chatops.package_version
-action_ref: st2-chatops-aliases.package_version
+action_ref: st2_chatops_aliases.package_version
 description: Show package versions on hosts
 formats:
   - display: "show version <package> on <hosts>"

@@ -1,7 +1,12 @@
 ### Place information about your pack version here.
 ---
-name: st2-chatops-aliases
+ref: st2_chatops_aliases
+name: st2_chatops_aliases
 description: Pack with sample Ansible ChatOps aliases
-version: 0.1.0
-author: StackStorm Stanley
-email: stanley@stackstorm.com
+keywords:
+  - chatops
+  - aliases
+  - ansible
+version: 0.2.0
+author: armab
+email: armab@stackstorm.com

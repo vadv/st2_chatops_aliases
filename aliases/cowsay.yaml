@@ -3,7 +3,7 @@
 # eq: `/usr/games/cowsay Holy ChatOps Cow!`
 ---
 name: chatops.cowsay
-action_ref: st2-chatops-aliases.cowsay
+action_ref: st2_chatops_aliases.cowsay
 description: Draws a cow that says what you want
 formats:
   - display: "cowsay <message>"
