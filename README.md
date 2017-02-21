@@ -7,12 +7,12 @@ For complete Vagrant demo, see [showcase-ansible-chatops](https://github.com/arm
 ## Installation
 Install st2 ansible integration pack (dependency): 
 ```sh
-st2 run packs.install packs=ansible
+st2 pack install ansible
 ```
 
 Install this custom pack:
 ```sh
-st2 run packs.install packs=st2-chatops-aliases repo_url=armab/st2-chatops-aliases
+st2 pack install armab/st2_chatops_aliases
 ```
 
 ## Available ChatOps commands
