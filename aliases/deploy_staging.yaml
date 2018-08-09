@@ -3,10 +3,10 @@ name: chatops.ansible_deploy_staging
 action_ref: st2_chatops_aliases.deploy_staging
 description: Deploy on remote hosts
 formats:
-  - display: "deploy_staging <type> on <hosts>"
+  - display: "deploy_staging <type>"
     representation:
-      - "deploy_staging {{ type }} on {{ hosts }}"
-      - "upgrade_staging {{ type }} on {{ hosts }}"
+      - "deploy_staging {{ type }}"
+      - "upgrade_staging {{ type }}"
 result:
   format: |
     Deploy type `{{ execution.parameters.type }}` on `{{ execution.parameters.hosts }}` host(s): {~}

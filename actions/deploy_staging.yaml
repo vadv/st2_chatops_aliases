@@ -17,10 +17,6 @@ parameters:
     description: "Command to run"
     immutable: true
     default: "/opt/stackstorm/virtualenvs/ansible/bin/ansible-playbook /opt/stackstorm/packs/${ST2_ACTION_PACK_NAME}/playbooks/deploy_staging.yaml --extra-vars='hosts={{hosts|replace('http://','')}} type={{type}}'"
-  hosts:
-    description: "Ansible hosts"
-    type: string
-    required: true
   type:
     description: "deploy type"
     type: string

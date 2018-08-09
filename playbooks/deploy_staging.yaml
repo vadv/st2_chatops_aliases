@@ -1,9 +1,10 @@
-- hosts: "{{ hosts }}"
-
-  gather_facts: no
-
+---
+- name: Deploy staging
+  hosts: staging
+  serial: "25%"
+  become: True
+  become_user: root
   tasks:
-
   - yum:
       name: bestdoctor.ru
       state: latest
