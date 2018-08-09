@@ -3,7 +3,7 @@ name: chatops.ansible_deploy_staging
 action_ref: st2_chatops_aliases.deploy_staging
 description: Deploy on remote hosts
 formats:
-  - display: "deploy_staging <deploy_type>"
+  - display: "deploy_staging <deploy_type: all|back|lp|spa|spa-lk|fa|spa-bestcrm>"
     representation:
       - "deploy_staging {{ deploy_type }}"
       - "upgrade_staging {{ deploy_type }}"
