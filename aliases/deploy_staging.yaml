@@ -1,12 +1,12 @@
 ---
-name: chatops.ansible_deploy
-action_ref: st2_chatops_aliases.deploy
+name: chatops.ansible_deploy_staging
+action_ref: st2_chatops_aliases.deploy_staging
 description: Deploy on remote hosts
 formats:
-  - display: "deploy <tags> on <hosts>"
+  - display: "deploy_staging <tags> on <hosts>"
     representation:
-      - "deploy {{ tags }} on {{ hosts }}"
-      - "upgrade {{ tags }} on {{ hosts }}"
+      - "deploy_staging {{ tags }} on {{ hosts }}"
+      - "upgrade_staging {{ tags }} on {{ hosts }}"
 result:
   format: |
     Deploy tags `{{ execution.parameters.tags }}` on `{{ execution.parameters.hosts }}` host(s): {~}

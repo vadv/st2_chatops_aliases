@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: "{{ hosts }}"
 
   gather_facts: no
 
@@ -8,96 +8,79 @@
       name: bestdoctor.ru
       state: latest
       update_cache: yes
-    tags:
-    - back
+      when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
 
   - yum:
       name: bestdoctor.ru-lp
       state: latest
       update_cache: yes
-    tags:
-    - lp
+      when: ("{{ type }}" == "all") or ("{{ type }}" == "lp")
 
   - yum:
       name: bestdoctor.ru-spa
       state: latest
       update_cache: yes
-    tags:
-    - spa
+      when: ("{{ type }}" == "all") or ("{{ type }}" == "spa")
 
   - yum:
       name: bestdoctor.ru-spa-lk
       state: latest
       update_cache: yes
-    tags:
-    - spa-lk
+      when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-lk")
 
   - yum:
       name: bestdoctor.ru-fa
       state: latest
       update_cache: yes
-    tags:
-    - fa
+      when: ("{{ type }}" == "all") or ("{{ type }}" == "fa")
 
   - yum:
       name: bestdoctor.ru-spa-bestcrm
       state: latest
       update_cache: yes
-    tags:
-    - spa-bestcrm
+      when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-bestcrm")
 
 
   - shell: /usr/local/bin/bestdoctor.ru-production-db.sh
-    when: "'azure' not in group_names"
-    tags:
-    - back
+    when: ("'azure' not in group_names")
 
   - shell: /usr/local/bin/bestdoctor.ru-migrate.sh
-    when: "'azure' not in group_names"
-    tags:
-    - back
+    when: ("'azure' not in group_names")
 
   - shell: /usr/pgsql-9.6/bin/psql -U postgres -Atc 'select 1' | grep 1
     retries: 20
     delay: 1
     register: result
     until: result.rc == 0
-    tags:
-    - back
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
 
   - name: "restart gunicorn-9002"
     shell: "if [[ -d /etc/service/gunicorn-9002 ]]; then /sbin/sv restart gunicorn-9002; fi"
-    tags:
-    - back
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
 
   - shell: curl -s -w "%{http_code}" http://127.0.0.1:9002/ | grep -E '200|404'
     retries: 20
     delay: 1
     register: result
     until: result.rc == 0
-    tags:
-    - back
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
 
   - shell: /sbin/sv restart /etc/service/celery-light*
     when: celery is defined and celery == "light"
-    tags:
-    - back
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
 
   - shell: /sbin/sv restart /etc/service/celery-heavy*
     when: celery is defined and celery == "heavy"
-    tags:
-    - back
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
 
   - shell: /sbin/sv restart /etc/service/looper-light*
     when: celery is defined and celery == "light"
-    tags:
-    - back
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
 
 # notify bestdoctor.ru-lp
   - shell: rpm -qa bestdoctor.ru-lp --queryformat "%{VERSION}\n"
     register: version_bestdoctor_lp
-    tags:
-    - lp
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "lp")
 
   - name: Send notification message via Slack all options
     slack:
@@ -107,14 +90,12 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    tags:
-    - lp
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "lp")
 
 # notify bestdoctor.ru-fa
   - shell: rpm -qa bestdoctor.ru-fa --queryformat "%{VERSION}\n"
     register: version_bestdoctor_fa
-    tags:
-    - fa
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "fa")
 
   - name: Send notification message via Slack all options
     slack:
@@ -124,14 +105,12 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    tags:
-    - fa
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "fa")
 
 # notify bestdoctor.ru-spa
   - shell: rpm -qa bestdoctor.ru-spa --queryformat "%{VERSION}\n"
     register: version_bestdoctor_spa
-    tags:
-    - spa
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa")
 
   - name: Send notification message via Slack all options
     slack:
@@ -141,14 +120,12 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    tags:
-    - spa
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa")
 
 # notify bestdoctor.ru-spa-lk
   - shell: rpm -qa bestdoctor.ru-spa-lk --queryformat "%{VERSION}\n"
     register: version_bestdoctor_spa_lk
-    tags:
-    - spa-lk
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-lk")
 
   - name: Send notification message via Slack all options
     slack:
@@ -158,14 +135,12 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    tags:
-    - spa-lk
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-lk")
 
 # notify bestdoctor.ru-spa-bestcrm
   - shell: rpm -qa bestdoctor.ru-spa-bestcrm --queryformat "%{VERSION}\n"
     register: version_bestdoctor_spa_bestcrm
-    tags:
-    - spa-bestcrm
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-bestcrm")
 
   - name: Send notification message via Slack all options
     slack:
@@ -175,14 +150,12 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    tags:
-    - spa-bestcrm
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-bestcrm")
 
 # notify bestdoctor.ru
   - shell: rpm -qa bestdoctor.ru  --queryformat "%{VERSION}\n"
     register: version_bestdoctor
-    tags:
-    - back
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
 
   - name: Send notification message via Slack all options
     slack:
@@ -192,5 +165,4 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    tags:
-    - back
+    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
