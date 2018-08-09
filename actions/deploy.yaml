@@ -1,0 +1,196 @@
+- hosts: all
+
+  gather_facts: no
+
+  tasks:
+
+  - yum:
+      name: bestdoctor.ru
+      state: latest
+      update_cache: yes
+    tags:
+    - back
+
+  - yum:
+      name: bestdoctor.ru-lp
+      state: latest
+      update_cache: yes
+    tags:
+    - lp
+
+  - yum:
+      name: bestdoctor.ru-spa
+      state: latest
+      update_cache: yes
+    tags:
+    - spa
+
+  - yum:
+      name: bestdoctor.ru-spa-lk
+      state: latest
+      update_cache: yes
+    tags:
+    - spa-lk
+
+  - yum:
+      name: bestdoctor.ru-fa
+      state: latest
+      update_cache: yes
+    tags:
+    - fa
+
+  - yum:
+      name: bestdoctor.ru-spa-bestcrm
+      state: latest
+      update_cache: yes
+    tags:
+    - spa-bestcrm
+
+
+  - shell: /usr/local/bin/bestdoctor.ru-production-db.sh
+    when: "'azure' not in group_names"
+    tags:
+    - back
+
+  - shell: /usr/local/bin/bestdoctor.ru-migrate.sh
+    when: "'azure' not in group_names"
+    tags:
+    - back
+
+  - shell: /usr/pgsql-9.6/bin/psql -U postgres -Atc 'select 1' | grep 1
+    retries: 20
+    delay: 1
+    register: result
+    until: result.rc == 0
+    tags:
+    - back
+
+  - name: "restart gunicorn-9002"
+    shell: "if [[ -d /etc/service/gunicorn-9002 ]]; then /sbin/sv restart gunicorn-9002; fi"
+    tags:
+    - back
+
+  - shell: curl -s -w "%{http_code}" http://127.0.0.1:9002/ | grep -E '200|404'
+    retries: 20
+    delay: 1
+    register: result
+    until: result.rc == 0
+    tags:
+    - back
+
+  - shell: /sbin/sv restart /etc/service/celery-light*
+    when: celery is defined and celery == "light"
+    tags:
+    - back
+
+  - shell: /sbin/sv restart /etc/service/celery-heavy*
+    when: celery is defined and celery == "heavy"
+    tags:
+    - back
+
+  - shell: /sbin/sv restart /etc/service/looper-light*
+    when: celery is defined and celery == "light"
+    tags:
+    - back
+
+# notify bestdoctor.ru-lp
+  - shell: rpm -qa bestdoctor.ru-lp --queryformat "%{VERSION}\n"
+    register: version_bestdoctor_lp
+    tags:
+    - lp
+
+  - name: Send notification message via Slack all options
+    slack:
+      color: good
+      token: T87L6JC03/B8A15BPM2/2ZY0C7zh2wK0BvZgxgQ5zRzk
+      msg: 'Deploy bestdoctor.ru-lp-{{ version_bestdoctor_lp.stdout }} on {{ inventory_hostname }} completed.'
+      channel: #dev_notify
+      username: 'Ansible'
+    delegate_to: localhost
+    tags:
+    - lp
+
+# notify bestdoctor.ru-fa
+  - shell: rpm -qa bestdoctor.ru-fa --queryformat "%{VERSION}\n"
+    register: version_bestdoctor_fa
+    tags:
+    - fa
+
+  - name: Send notification message via Slack all options
+    slack:
+      color: good
+      token: T87L6JC03/B8A15BPM2/2ZY0C7zh2wK0BvZgxgQ5zRzk
+      msg: 'Deploy bestdoctor.ru-fa-{{ version_bestdoctor_fa.stdout }} on {{ inventory_hostname }} completed.'
+      channel: #dev_notify
+      username: 'Ansible'
+    delegate_to: localhost
+    tags:
+    - fa
+
+# notify bestdoctor.ru-spa
+  - shell: rpm -qa bestdoctor.ru-spa --queryformat "%{VERSION}\n"
+    register: version_bestdoctor_spa
+    tags:
+    - spa
+
+  - name: Send notification message via Slack all options
+    slack:
+      color: good
+      token: T87L6JC03/B8A15BPM2/2ZY0C7zh2wK0BvZgxgQ5zRzk
+      msg: 'Deploy bestdoctor.ru-spa-{{ version_bestdoctor_spa.stdout }} on {{ inventory_hostname }} completed.'
+      channel: #dev_notify
+      username: 'Ansible'
+    delegate_to: localhost
+    tags:
+    - spa
+
+# notify bestdoctor.ru-spa-lk
+  - shell: rpm -qa bestdoctor.ru-spa-lk --queryformat "%{VERSION}\n"
+    register: version_bestdoctor_spa_lk
+    tags:
+    - spa-lk
+
+  - name: Send notification message via Slack all options
+    slack:
+      color: good
+      token: T87L6JC03/B8A15BPM2/2ZY0C7zh2wK0BvZgxgQ5zRzk
+      msg: 'Deploy bestdoctor.ru-spa-lk-{{ version_bestdoctor_spa_lk.stdout }} on {{ inventory_hostname }} completed.'
+      channel: #dev_notify
+      username: 'Ansible'
+    delegate_to: localhost
+    tags:
+    - spa-lk
+
+# notify bestdoctor.ru-spa-bestcrm
+  - shell: rpm -qa bestdoctor.ru-spa-bestcrm --queryformat "%{VERSION}\n"
+    register: version_bestdoctor_spa_bestcrm
+    tags:
+    - spa-bestcrm
+
+  - name: Send notification message via Slack all options
+    slack:
+      color: good
+      token: T87L6JC03/B8A15BPM2/2ZY0C7zh2wK0BvZgxgQ5zRzk
+      msg: 'Deploy bestdoctor.ru-spa-bestcrm-{{ version_bestdoctor_spa_bestcrm.stdout }} on {{ inventory_hostname }} completed.'
+      channel: #dev_notify
+      username: 'Ansible'
+    delegate_to: localhost
+    tags:
+    - spa-bestcrm
+
+# notify bestdoctor.ru
+  - shell: rpm -qa bestdoctor.ru  --queryformat "%{VERSION}\n"
+    register: version_bestdoctor
+    tags:
+    - back
+
+  - name: Send notification message via Slack all options
+    slack:
+      color: good
+      token: T87L6JC03/B8A15BPM2/2ZY0C7zh2wK0BvZgxgQ5zRzk
+      msg: 'Deploy bestdoctor.ru-{{ version_bestdoctor.stdout }} on {{ inventory_hostname }} completed.'
+      channel: #dev_notify
+      username: 'Ansible'
+    delegate_to: localhost
+    tags:
+    - back
