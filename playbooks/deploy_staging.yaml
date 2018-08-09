@@ -9,37 +9,37 @@
       name: bestdoctor.ru
       state: latest
       update_cache: yes
-      when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
+      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
   - yum:
       name: bestdoctor.ru-lp
       state: latest
       update_cache: yes
-      when: ("{{ type }}" == "all") or ("{{ type }}" == "lp")
+      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "lp")
 
   - yum:
       name: bestdoctor.ru-spa
       state: latest
       update_cache: yes
-      when: ("{{ type }}" == "all") or ("{{ type }}" == "spa")
+      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa")
 
   - yum:
       name: bestdoctor.ru-spa-lk
       state: latest
       update_cache: yes
-      when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-lk")
+      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa-lk")
 
   - yum:
       name: bestdoctor.ru-fa
       state: latest
       update_cache: yes
-      when: ("{{ type }}" == "all") or ("{{ type }}" == "fa")
+      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "fa")
 
   - yum:
       name: bestdoctor.ru-spa-bestcrm
       state: latest
       update_cache: yes
-      when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-bestcrm")
+      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa-bestcrm")
 
 
   - shell: /usr/local/bin/bestdoctor.ru-production-db.sh
@@ -53,35 +53,35 @@
     delay: 1
     register: result
     until: result.rc == 0
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
   - name: "restart gunicorn-9002"
     shell: "if [[ -d /etc/service/gunicorn-9002 ]]; then /sbin/sv restart gunicorn-9002; fi"
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
   - shell: curl -s -w "%{http_code}" http://127.0.0.1:9002/ | grep -E '200|404'
     retries: 20
     delay: 1
     register: result
     until: result.rc == 0
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
   - shell: /sbin/sv restart /etc/service/celery-light*
     when: celery is defined and celery == "light"
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
   - shell: /sbin/sv restart /etc/service/celery-heavy*
     when: celery is defined and celery == "heavy"
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
   - shell: /sbin/sv restart /etc/service/looper-light*
     when: celery is defined and celery == "light"
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
 # notify bestdoctor.ru-lp
   - shell: rpm -qa bestdoctor.ru-lp --queryformat "%{VERSION}\n"
     register: version_bestdoctor_lp
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "lp")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "lp")
 
   - name: Send notification message via Slack all options
     slack:
@@ -91,12 +91,12 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "lp")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "lp")
 
 # notify bestdoctor.ru-fa
   - shell: rpm -qa bestdoctor.ru-fa --queryformat "%{VERSION}\n"
     register: version_bestdoctor_fa
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "fa")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "fa")
 
   - name: Send notification message via Slack all options
     slack:
@@ -106,12 +106,12 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "fa")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "fa")
 
 # notify bestdoctor.ru-spa
   - shell: rpm -qa bestdoctor.ru-spa --queryformat "%{VERSION}\n"
     register: version_bestdoctor_spa
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa")
 
   - name: Send notification message via Slack all options
     slack:
@@ -121,12 +121,12 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa")
 
 # notify bestdoctor.ru-spa-lk
   - shell: rpm -qa bestdoctor.ru-spa-lk --queryformat "%{VERSION}\n"
     register: version_bestdoctor_spa_lk
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-lk")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa-lk")
 
   - name: Send notification message via Slack all options
     slack:
@@ -136,12 +136,12 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-lk")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa-lk")
 
 # notify bestdoctor.ru-spa-bestcrm
   - shell: rpm -qa bestdoctor.ru-spa-bestcrm --queryformat "%{VERSION}\n"
     register: version_bestdoctor_spa_bestcrm
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-bestcrm")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa-bestcrm")
 
   - name: Send notification message via Slack all options
     slack:
@@ -151,12 +151,12 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "spa-bestcrm")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa-bestcrm")
 
 # notify bestdoctor.ru
   - shell: rpm -qa bestdoctor.ru  --queryformat "%{VERSION}\n"
     register: version_bestdoctor
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
   - name: Send notification message via Slack all options
     slack:
@@ -166,4 +166,4 @@
       channel: #dev_notify
       username: 'Ansible'
     delegate_to: localhost
-    when: ("{{ type }}" == "all") or ("{{ type }}" == "back")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
