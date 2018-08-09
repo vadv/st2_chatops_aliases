@@ -5,7 +5,7 @@ This is unofficial [StackStorm](http://stackstorm.com/) pack with some simple bu
 For complete Vagrant demo, see [showcase-ansible-chatops](https://github.com/armab/showcase-ansible-chatops) repo.
 
 ## Installation
-Install st2 ansible integration pack (dependency): 
+Install st2 ansible integration pack (dependency):
 ```sh
 st2 pack install ansible
 ```
@@ -29,4 +29,3 @@ Full list of available commands (with real use case Slack screenshots):
 * [`!cowsay <message>`](https://i.imgur.com/mCYHFM6.png) - Draws a cow that says what you want
 
 See action [`aliases`](aliases/) code for explanation.
-
