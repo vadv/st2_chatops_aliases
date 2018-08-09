@@ -4,42 +4,43 @@
   serial: "25%"
   become: True
   become_user: root
+
   tasks:
   - yum:
       name: bestdoctor.ru
       state: latest
       update_cache: yes
-      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
   - yum:
       name: bestdoctor.ru-lp
       state: latest
       update_cache: yes
-      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "lp")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "lp")
 
   - yum:
       name: bestdoctor.ru-spa
       state: latest
       update_cache: yes
-      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa")
 
   - yum:
       name: bestdoctor.ru-spa-lk
       state: latest
       update_cache: yes
-      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa-lk")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa-lk")
 
   - yum:
       name: bestdoctor.ru-fa
       state: latest
       update_cache: yes
-      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "fa")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "fa")
 
   - yum:
       name: bestdoctor.ru-spa-bestcrm
       state: latest
       update_cache: yes
-      when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa-bestcrm")
+    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "spa-bestcrm")
 
 
   - shell: /usr/local/bin/bestdoctor.ru-production-db.sh
@@ -67,16 +68,13 @@
     when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
   - shell: /sbin/sv restart /etc/service/celery-light*
-    when: celery is defined and celery == "light"
-    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
+    when: (celery is defined and celery == "light") and ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
   - shell: /sbin/sv restart /etc/service/celery-heavy*
-    when: celery is defined and celery == "heavy"
-    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
+    when: (celery is defined and celery == "heavy") and ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
   - shell: /sbin/sv restart /etc/service/looper-light*
-    when: celery is defined and celery == "light"
-    when: ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
+    when: ( celery is defined and celery == "light") and ("{{ deploy_type }}" == "all") or ("{{ deploy_type }}" == "back")
 
 # notify bestdoctor.ru-lp
   - shell: rpm -qa bestdoctor.ru-lp --queryformat "%{VERSION}\n"
