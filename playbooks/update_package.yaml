@@ -6,7 +6,7 @@
   become_user: root
   tasks:
     - name: Check if Package is installed
-      command: dpkg-query -l {{ package }}
+      command: rpm -qa {{ package }}
       register: is_installed
       failed_when: is_installed.rc > 1
       changed_when: no
